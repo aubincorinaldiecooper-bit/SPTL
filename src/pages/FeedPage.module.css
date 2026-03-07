@@ -1,0 +1,116 @@
+.page {
+  min-height: 100vh;
+  background: #0e0e0e;
+  color: #fff;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 26px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(12px);
+  background: rgba(14, 14, 14, 0.6);
+  margin-bottom: 18px;
+}
+
+.appName {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.uploadBtn {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #2f8fff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.errorBanner {
+  margin-bottom: 14px;
+  border-radius: 16px;
+  background: #3c191f;
+  border: 1px solid #672732;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.retryBtn {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.empty {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #d4d6df;
+}
+
+.emptyIcon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.loadingRow {
+  display: grid;
+  place-items: center;
+  padding: 14px 0;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+}
+
+.sentinel {
+  width: 100%;
+  height: 1px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
