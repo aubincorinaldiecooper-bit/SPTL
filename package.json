@@ -1,0 +1,24 @@
+{
+  "name": "sptl-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.115.0",
+    "@react-three/fiber": "^8.17.10",
+    "@spz-loader/core": "^0.0.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.1.0",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.8"
+  }
+}
