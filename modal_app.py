@@ -15,7 +15,7 @@ image = (
     .apt_install("git", "ffmpeg", "libgl1-mesa-glx", "libglib2.0-0")
     .run_commands(
         "git clone https://github.com/apple/ml-sharp /app/ml-sharp",
-        "pip install -r /app/ml-sharp/requirements.in",
+        "pip install --no-deps -r /app/ml-sharp/requirements.in || pip install torch torchvision einops timm",
     )
     .pip_install_from_requirements("requirements.txt")
     .pip_install("spz", "huggingface_hub")
