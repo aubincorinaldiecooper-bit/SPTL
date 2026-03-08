@@ -179,7 +179,10 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
     if not isinstance(pred, dict):
         raise RuntimeError("ml-sharp inference output is expected to be a dict with gaussian/depth tensors")
 
-    means = _to_numpy(pred.get("means") or pred.get("xyz") or pred.get("positions"))
+    means_src = next((v for v in [pred.get("means"), pred.get("xyz"), pred.get("positions")] if v is not None), None)
+    if means_src is None:
+        raise RuntimeError("Inference output does not include gaussian means/xyz/positions")
+    means = _to_numpy(means_src)
     if means.ndim == 3:
         means = means[0]
 
@@ -187,7 +190,7 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
         raise RuntimeError("Inference output does not include valid gaussian means/xyz")
     means = means[:, :3].astype(np.float32)
 
-    colors_src = pred.get("colors") or pred.get("rgb") or pred.get("features_dc")
+    colors_src = next((v for v in [pred.get("colors"), pred.get("rgb"), pred.get("features_dc")] if v is not None), None)
     if colors_src is None:
         colors = np.full((means.shape[0], 3), 255, dtype=np.uint8)
     else:
@@ -199,7 +202,7 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
             colors = (colors * 255.0).clip(0, 255)
         colors = colors.astype(np.uint8)
 
-    scales_src = pred.get("scales") or pred.get("scale")
+    scales_src = next((v for v in [pred.get("scales"), pred.get("scale")] if v is not None), None)
     if scales_src is None:
         scales = np.full((means.shape[0], 3), 0.01, dtype=np.float32)
     else:
@@ -210,7 +213,7 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
             scales = np.repeat(scales, 3, axis=1)
         scales = scales[:, :3].astype(np.float32)
 
-    opacity_src = pred.get("opacity") or pred.get("opacities") or pred.get("alpha")
+    opacity_src = next((v for v in [pred.get("opacity"), pred.get("opacities"), pred.get("alpha")] if v is not None), None)
     if opacity_src is None:
         opacity = np.ones((means.shape[0], 1), dtype=np.float32)
     else:
@@ -221,7 +224,7 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
             opacity = opacity[:, None]
         opacity = opacity[:, :1].astype(np.float32)
 
-    rot_src = pred.get("rotations") or pred.get("rotation") or pred.get("quaternions")
+    rot_src = next((v for v in [pred.get("rotations"), pred.get("rotation"), pred.get("quaternions")] if v is not None), None)
     if rot_src is None:
         rotations = np.zeros((means.shape[0], 4), dtype=np.float32)
         rotations[:, 0] = 1.0
@@ -236,7 +239,7 @@ def _extract_gaussians(prediction: Any, image_np: Any) -> tuple[Any, Any, Any, A
             rotations = fixed
         rotations = rotations[:, :4].astype(np.float32)
 
-    depth_src = pred.get("depth") or pred.get("depth_map") or pred.get("disparity")
+    depth_src = next((v for v in [pred.get("depth"), pred.get("depth_map"), pred.get("disparity")] if v is not None), None)
     if depth_src is None:
         depth = np.linalg.norm(means, axis=1)
         h, w, _ = image_np.shape
