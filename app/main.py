@@ -5,9 +5,8 @@ from pathlib import Path
 
 from fastapi import BackgroundTasks, FastAPI, File, Form, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
 from app.services.spatial_photo_service import RateLimitError, SpatialPhotoService, UploadValidationError
 
@@ -19,9 +18,6 @@ output_root_raw = os.getenv("SPATIAL_OUTPUT_ROOT", str(BASE_DIR / "data/spatial-
 OUTPUT_ROOT = Path(output_root_raw)
 
 service = SpatialPhotoService(ml_sharp_command=ML_SHARP_COMMAND, output_root=OUTPUT_ROOT)
-templates = Jinja2Templates(directory=str(BASE_DIR / "app/templates"))
-
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "app/static")), name="static")
 app.mount("/generated", StaticFiles(directory=str(service.output_root)), name="generated")
 
 
@@ -36,9 +32,9 @@ async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONRespons
     return JSONResponse(status_code=500, content={"error": str(exc) or "Unexpected server error", "job_id": None})
 
 
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(request=request, name="index.html")
+@app.get("/")
+def index() -> JSONResponse:
+    return JSONResponse(status_code=200, content={"name": "Spatial Photo Backend", "status": "ok"})
 
 
 @app.get("/health")
