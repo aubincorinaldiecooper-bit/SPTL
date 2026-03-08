@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hexa UI Spatial Photos</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  </head>
+  <body>
+    <main class="hexta-shell">
+      <section class="panel hero">
+        <p class="tag">HEXA UI · Spatial Photos</p>
+        <h1>Turn 2D photos into immersive 3D moments</h1>
+        <p class="muted">Upload a photo and preview generated spatial output from the ML Sharp pipeline.</p>
+      </section>
+
+      <section class="panel uploader">
+        <form id="upload-form">
+          <label class="field-label" for="image">Choose image</label>
+          <input id="image" name="image" type="file" accept="image/*" required />
+
+          <label class="field-label" for="user_id">User ID (optional)</label>
+          <input id="user_id" name="user_id" type="text" placeholder="user-123" />
+
+          <button id="submit-btn" type="submit">Generate Spatial Photo</button>
+        </form>
+        <p id="status" class="status"></p>
+      </section>
+
+      <section class="panel results" id="results" hidden>
+        <h2>Spatial Output</h2>
+        <ul id="artifact-list"></ul>
+        <div id="viewer-container"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
