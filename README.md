@@ -95,5 +95,5 @@ make dev-frontend
 
 Production `.env.production`:
 
-- `VITE_API_BASE_URL=https://aubincorinaldiecooper--spatial-fastapi-modal.modal.run`
+- `VITE_API_URL=https://aubincorinaldiecooper--spatial-fastapi-modal-fastapi-modal.modal.run`
 - `VITE_APP_NAME=SPTL`
