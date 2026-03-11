@@ -8,10 +8,14 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from app.services.spatial_photo_service import RateLimitError, SpatialPhotoService, UploadValidationError
 
 app = FastAPI(title="Spatial Photo Backend")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ML_SHARP_COMMAND = os.getenv("ML_SHARP_COMMAND", f"python {BASE_DIR / 'scripts/run_ml_sharp.py'}")
