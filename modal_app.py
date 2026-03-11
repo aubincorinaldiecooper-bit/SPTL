@@ -4,9 +4,16 @@ import modal
 
 app = modal.App("spatial-fastapi-modal")
 
-DATA_VOLUME = modal.Volume.from_name("spatial-data", create_if_missing=True)
+DATA_VOLUME_NAME = "spatial-data"
+CHECKPOINTS_VOLUME_NAME = "spatial-checkpoints"
+
+DATA_VOLUME = modal.Volume.from_name(
+    DATA_VOLUME_NAME,
+    create_if_missing=True,
+)
 CHECKPOINTS_VOLUME = modal.Volume.from_name(
-    "spatial-checkpoints", create_if_missing=True
+    CHECKPOINTS_VOLUME_NAME,
+    create_if_missing=True,
 )
 SECRETS = [modal.Secret.from_name("spatial-app-secrets")]
 
