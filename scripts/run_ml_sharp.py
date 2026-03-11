@@ -464,6 +464,17 @@ def _convert_ply_file_to_spz(ply_path: Path, output_dir: Path) -> Path:
     raise RuntimeError("Unsupported spz API: could not find a PLY->SPZ conversion entrypoint")
 
 
+def _assert_required_outputs(output_dir: Path) -> None:
+    required = {
+        "output.ply": output_dir / "output.ply",
+        "output.spz": output_dir / "output.spz",
+        "depth.png": output_dir / "depth.png",
+    }
+    missing = [name for name, path in required.items() if not path.exists()]
+    if missing:
+        raise FileNotFoundError(f"Pipeline missing required output artifacts: {', '.join(missing)}")
+
+
 def run_pipeline(input_path: Path, output_dir: Path, checkpoint_arg: str | None = None) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -499,6 +510,9 @@ def run_pipeline(input_path: Path, output_dir: Path, checkpoint_arg: str | None 
 
             step = "convert_ply_to_spz"
             _convert_ply_to_spz(output_dir, ply_path, means, colors, scales, opacity, rotations)
+
+        step = "validate_outputs"
+        _assert_required_outputs(output_dir)
 
         step = "emit_manifest"
         _write_manifest(

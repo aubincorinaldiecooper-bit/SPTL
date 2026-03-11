@@ -226,6 +226,16 @@ class SpatialPhotoService:
 
             status = manifest.get("status")
             if status == "done":
+                if not self._has_required_outputs(job_dir):
+                    manifest = {
+                        "status": "failed",
+                        "error": "Manifest reports done but required artifacts are missing",
+                        "step": "validate_outputs",
+                    }
+                    self._write_manifest(job_dir / "manifest.json", manifest)
+                    status = "failed"
+
+            if status == "done":
                 spz_name = str(manifest.get("spz", "output.spz"))
                 depth_name = str(manifest.get("depth_map", "depth.png"))
                 self.jobs[job_id].update(
@@ -249,7 +259,7 @@ class SpatialPhotoService:
                     }
                 )
                 self._append_job_record(job_id, self.jobs[job_id])
-            elif completed.returncode == 0 and tuple(self._discover_artifacts(job_dir)):
+            elif completed.returncode == 0 and self._has_required_outputs(job_dir):
                 self._write_manifest(
                     job_dir / "manifest.json",
                     {"status": "done", "spz": "output.spz", "depth_map": "depth.png"},
@@ -433,6 +443,10 @@ class SpatialPhotoService:
                 and not path.name.startswith("input")
             ):
                 yield SpatialPhotoArtifact(name=path.name, path=path)
+
+    @staticmethod
+    def _has_required_outputs(job_dir: Path) -> bool:
+        return (job_dir / "output.spz").exists() and (job_dir / "depth.png").exists()
 
     def _validate_file_size(self, content_length: int | None, image_bytes: bytes) -> None:
         if content_length is not None and content_length > MAX_FILE_SIZE_BYTES:
